@@ -1,11 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>vg.civcraft.mc.citadel</groupId>
 	<artifactId>Citadel</artifactId>
 	<packaging>jar</packaging>
-	<version>3.11.5</version>
+	<version>4.0.2</version>
 	<name>Citadel</name>
 	<url>https://github.com/Devotedmc/Citadel</url>
 
@@ -23,16 +24,19 @@
 			</plugins>
 		</pluginManagement>
 
-		<sourceDirectory>${basedir}/src</sourceDirectory>
-
 		<resources>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<includes>
+					<include>*.yml</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
 			<resource>
 				<directory>${basedir}</directory>
 				<includes>
 					<include>LICENSE.txt</include>
-					<include>*.yml</include>
 				</includes>
-				<filtering>true</filtering>
 			</resource>
 		</resources>
 	</build>
@@ -41,20 +45,27 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.12.2-R0.1-SNAPSHOT</version>
+			<version>1.14.4-R0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>vg.civcraft.mc.civmodcore</groupId>
 			<artifactId>CivModCore</artifactId>
-			<version>1.6.1</version>
+			<version>1.7.6</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>vg.civcraft.mc.namelayer</groupId>
 			<artifactId>NameLayer</artifactId>
-			<version>2.11.0</version>
+			<version>2.13.1</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.gmail.filoghost.holographicdisplays</groupId>
+			<artifactId>holographicdisplays-api</artifactId>
+			<version>2.3.2</version>
+			<scope>provided</scope>
+		</dependency>
+
 	</dependencies>
 
 	<repositories>
@@ -66,6 +77,9 @@
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
+		<repository>
+			<id>filoghost-repo</id>
+			<url>https://ci.filoghost.me/plugin/repository/everything/</url>
+		</repository>
 	</repositories>
-
 </project>
