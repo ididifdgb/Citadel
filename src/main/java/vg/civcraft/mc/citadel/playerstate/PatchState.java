@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import vg.civcraft.mc.citadel.CitadelPermissionHandler;
+import vg.civcraft.mc.citadel.Citadel;
 import vg.civcraft.mc.citadel.CitadelUtility;
 import vg.civcraft.mc.citadel.ReinforcementLogic;
 import vg.civcraft.mc.citadel.command.PatchMode;
@@ -39,13 +39,13 @@ public class PatchState extends AbstractPlayerState {
 			CitadelUtility.sendAndLog(player, ChatColor.RED, "This block is not reinforced");
 			return;
 		}
-		if (!rein.hasPermission(player, CitadelPermissionHandler.getRepair())) {
+		if (!rein.hasPermission(player, Citadel.getInstance().getPermissionHandler().getRepair())) {
 			CitadelUtility.sendAndLog(player, ChatColor.RED,
 					"You do not have permission to repair reinforcements on this group");
 			return;
 		}
 		if (rein.getHealth() >= rein.getType().getHealth()) {
-			if (rein.hasPermission(player, CitadelPermissionHandler.getRepair())) {
+			if (rein.hasPermission(player, Citadel.getInstance().getPermissionHandler().getRepair())) {
 				CitadelUtility.sendAndLog(player, ChatColor.GOLD,
 						"Reinforcement is already at " + ModeListener.formatHealth(rein) + ChatColor.GOLD
 								+ " health with " + ChatColor.AQUA + rein.getType().getName() + ChatColor.GOLD + " on "

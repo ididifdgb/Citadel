@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -30,20 +31,13 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.scheduler.BukkitRunnable;
+
 import vg.civcraft.mc.citadel.Citadel;
-import vg.civcraft.mc.citadel.CitadelPermissionHandler;
 import vg.civcraft.mc.citadel.ReinforcementLogic;
 import vg.civcraft.mc.citadel.model.Reinforcement;
 import vg.civcraft.mc.civmodcore.api.ItemAPI;
-import vg.civcraft.mc.namelayer.GroupManager;
-import vg.civcraft.mc.namelayer.NameAPI;
-import vg.civcraft.mc.namelayer.NameLayerPlugin;
-import vg.civcraft.mc.namelayer.database.GroupManagerDao;
 
 public class EntityListener implements Listener {
-
-	protected GroupManager gm = NameAPI.getGroupManager();
 
 	// prevent zombies from breaking reinforced doors
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -130,20 +124,7 @@ public class EntityListener implements Listener {
 	public void playerJoinEvent(PlayerJoinEvent event) {
 		Player p = event.getPlayer();
 		final UUID uuid = p.getUniqueId();
-
-
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				GroupManagerDao db = NameLayerPlugin.getGroupManagerDao();
-				for (String groupName : db.getGroupNames(uuid)) {
-					if (NameAPI.getGroupManager().hasAccess(groupName, uuid,
-							CitadelPermissionHandler.getBypass())) {
-						GroupManager.getGroup(groupName).updateActivityTimeStamp();
-					}
-				}
-			}
-		}.runTaskAsynchronously(Citadel.getInstance());
+		//TODO figure out decay again
 	}
 
 	// prevent creating golems from reinforced blocks
@@ -182,7 +163,7 @@ public class EntityListener implements Listener {
 		if (reinforcement.isInsecure()) {
 			return;
 		}
-		if (reinforcement.hasPermission(player, CitadelPermissionHandler.getHangingPlaceBreak())) {
+		if (reinforcement.hasPermission(player, Citadel.getInstance().getPermissionHandler().getHangingPlaceBreak())) {
 			return;
 		}
 		player.sendMessage(ChatColor.RED + "You cannot place those on blocks you don't have permissions for.");
@@ -219,7 +200,7 @@ public class EntityListener implements Listener {
 				if (reinforcement.isInsecure()) {
 					return;
 				}
-				if (reinforcement.hasPermission(player, CitadelPermissionHandler.getHangingPlaceBreak())) {
+				if (reinforcement.hasPermission(player, Citadel.getInstance().getPermissionHandler().getHangingPlaceBreak())) {
 					return;
 				}
 				player.sendMessage(ChatColor.RED + "The host block is protecting this.");
@@ -273,7 +254,7 @@ public class EntityListener implements Listener {
 				if (reinforcement.isInsecure()) {
 					return;
 				}
-				if (reinforcement.hasPermission(player, CitadelPermissionHandler.getItemFramePutTake())) {
+				if (reinforcement.hasPermission(player, Citadel.getInstance().getPermissionHandler().getItemFramePutTake())) {
 					return;
 				}
 			}
@@ -303,12 +284,12 @@ public class EntityListener implements Listener {
 			}
 			// If the Item Frame already has an item, then the only possible action is rotation
 			if (ItemAPI.isValidItem(((ItemFrame) entity).getItem())) {
-				if (reinforcement.hasPermission(player, CitadelPermissionHandler.getItemFrameRotate())) {
+				if (reinforcement.hasPermission(player, Citadel.getInstance().getPermissionHandler().getItemFrameRotate())) {
 					return;
 				}
 			}
 			// If the Item Frame is empty, then the only possible action is placement
-			if (reinforcement.hasPermission(player, CitadelPermissionHandler.getItemFramePutTake())) {
+			if (reinforcement.hasPermission(player, Citadel.getInstance().getPermissionHandler().getItemFramePutTake())) {
 				return;
 			}
 		}

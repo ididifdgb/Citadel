@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 import vg.civcraft.mc.citadel.model.Reinforcement;
-import vg.civcraft.mc.namelayer.group.Group;
+import vg.civcraft.mc.namelayer.core.Group;
 
 /**
  * Called when the group a reinforcement is on is changed

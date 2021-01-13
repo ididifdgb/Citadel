@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import vg.civcraft.mc.citadel.Citadel;
 import vg.civcraft.mc.citadel.CitadelUtility;
 import vg.civcraft.mc.citadel.reinforcementtypes.ReinforcementType;
-import vg.civcraft.mc.namelayer.group.Group;
+import vg.civcraft.mc.namelayer.core.Group;
 
 public class AdvancedFortificationState extends AbstractPlayerState {
 

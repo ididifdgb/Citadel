@@ -15,13 +15,12 @@ import vg.civcraft.mc.citadel.ReinforcementLogic;
 import vg.civcraft.mc.citadel.model.Reinforcement;
 import vg.civcraft.mc.citadel.reinforcementtypes.ReinforcementType;
 import vg.civcraft.mc.civmodcore.command.CivCommand;
-import vg.civcraft.mc.civmodcore.command.StandaloneCommand;
-import vg.civcraft.mc.namelayer.GroupManager;
-import vg.civcraft.mc.namelayer.NameAPI;
-import vg.civcraft.mc.namelayer.group.Group;
+import vg.civcraft.mc.namelayer.core.Group;
+import vg.civcraft.mc.namelayer.mc.GroupAPI;
+import vg.civcraft.mc.namelayer.mc.commands.NameLayerCommand;
 
 @CivCommand(id = "ctar")
-public class AreaReinforce extends StandaloneCommand {
+public class AreaReinforce extends NameLayerCommand {
 
 	@Override
 	public boolean execute(CommandSender sender, String[] args) {
@@ -30,26 +29,25 @@ public class AreaReinforce extends StandaloneCommand {
 			return true;
 		}
 		Player p = (Player) sender;
-		UUID uuid = NameAPI.getUUID(p.getName());
+		UUID uuid = resolveUUID(sender);
 		ReinforcementType reinType = Citadel.getInstance().getReinforcementTypeManager()
 				.getByItemStack(p.getInventory().getItemInMainHand());
 		if (reinType == null) {
 			CitadelUtility.sendAndLog(p, ChatColor.RED, "The item you are holding is not a possible reinforcement");
 			return true;
 		}
-		String groupName = null;
+		Group group = null;
 		if (args.length == 6) {
-			groupName = NameAPI.getGroupManager().getDefaultGroup(uuid);
-			if (groupName == null) {
+			group = GroupAPI.getDefaultGroup(p);
+			if (group == null) {
 				CitadelUtility.sendAndLog(p, ChatColor.RED, "You need to set a default group \n Use /nlsdg to do so");
 				return true;
 			}
 		} else {
-			groupName = args[0];
+			group = GroupAPI.getGroup(args [0]);
 		}
-		Group group = GroupManager.getGroup(groupName);
 		if (group == null) {
-			CitadelUtility.sendAndLog(p, ChatColor.RED, "That group does not exist.");
+			CitadelUtility.sendAndLog(p, ChatColor.RED, "The group " + args[0] + " does not exist.");
 			return true;
 		}
 		// no additional group permission check here because the player is

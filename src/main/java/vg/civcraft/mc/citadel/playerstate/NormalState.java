@@ -10,9 +10,8 @@ import org.bukkit.inventory.ItemStack;
 import vg.civcraft.mc.citadel.Citadel;
 import vg.civcraft.mc.citadel.CitadelUtility;
 import vg.civcraft.mc.citadel.reinforcementtypes.ReinforcementType;
-import vg.civcraft.mc.namelayer.GroupManager;
-import vg.civcraft.mc.namelayer.NameAPI;
-import vg.civcraft.mc.namelayer.group.Group;
+import vg.civcraft.mc.namelayer.core.Group;
+import vg.civcraft.mc.namelayer.mc.GroupAPI;
 
 public class NormalState extends AbstractPlayerState {
 
@@ -36,8 +35,7 @@ public class NormalState extends AbstractPlayerState {
 		if (type == null) {
 			return;
 		}
-		String defaultGroupName = NameAPI.getGroupManager().getDefaultGroup(player.getUniqueId());
-		Group defaultGroup = GroupManager.getGroup(defaultGroupName);
+		Group defaultGroup = GroupAPI.getDefaultGroup(player);
 		if (defaultGroup == null) {
 			return;
 		}
@@ -58,8 +56,7 @@ public class NormalState extends AbstractPlayerState {
 		if (type == null) {
 			return;
 		}
-		String defaultGroupName = NameAPI.getGroupManager().getDefaultGroup(player.getUniqueId());
-		Group defaultGroup = GroupManager.getGroup(defaultGroupName);
+		Group defaultGroup = GroupAPI.getDefaultGroup(player);
 		if (defaultGroup == null) {
 			return;
 		}

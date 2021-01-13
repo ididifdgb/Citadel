@@ -8,7 +8,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import vg.civcraft.mc.citadel.Citadel;
-import vg.civcraft.mc.citadel.CitadelPermissionHandler;
 import vg.civcraft.mc.citadel.CitadelUtility;
 import vg.civcraft.mc.citadel.ReinforcementLogic;
 import vg.civcraft.mc.citadel.events.ReinforcementChangeTypeEvent;
@@ -16,8 +15,8 @@ import vg.civcraft.mc.citadel.events.ReinforcementGroupChangeEvent;
 import vg.civcraft.mc.citadel.model.Reinforcement;
 import vg.civcraft.mc.citadel.reinforcementtypes.ReinforcementType;
 import vg.civcraft.mc.civmodcore.itemHandling.ItemMap;
-import vg.civcraft.mc.namelayer.NameAPI;
-import vg.civcraft.mc.namelayer.group.Group;
+import vg.civcraft.mc.namelayer.core.Group;
+import vg.civcraft.mc.namelayer.mc.GroupAPI;
 
 public class ReinforcingState extends AbstractPlayerState {
 
@@ -45,13 +44,6 @@ public class ReinforcingState extends AbstractPlayerState {
 	public void handleInteractBlock(PlayerInteractEvent e) {
 		// always cancel
 		e.setCancelled(true);
-		// does group still exist?
-		if (!group.isValid()) {
-			CitadelUtility.sendAndLog(e.getPlayer(), ChatColor.RED,
-					"The group " + group.getName() + " seems to have been deleted in the mean time");
-			Citadel.getInstance().getStateManager().setState(e.getPlayer(), null);
-			return;
-		}
 		Player player = e.getPlayer();
 		// does the player have an item?
 		if (e.getItem() == null) {
@@ -72,8 +64,8 @@ public class ReinforcingState extends AbstractPlayerState {
 			return;
 		}
 		// does the player have permission to reinforce on that group
-		if (!NameAPI.getGroupManager().hasAccess(group, e.getPlayer().getUniqueId(),
-				CitadelPermissionHandler.getReinforce())) {
+		if (!GroupAPI.hasPermission(e.getPlayer(), group,
+				Citadel.getInstance().getPermissionHandler().getReinforce())) {
 			CitadelUtility.sendAndLog(e.getPlayer(), ChatColor.RED,
 					"You seem to have lost permission to reinforce on " + group.getName());
 			Citadel.getInstance().getStateManager().setState(e.getPlayer(), null);
@@ -82,7 +74,7 @@ public class ReinforcingState extends AbstractPlayerState {
 		Reinforcement rein = ReinforcementLogic.getReinforcementProtecting(block);
 		// if reinforcement exists, check if player has permission to edit it
 		if (rein != null) {
-			if (!rein.hasPermission(e.getPlayer(), CitadelPermissionHandler.getBypass())) {
+			if (!rein.hasPermission(e.getPlayer(), Citadel.getInstance().getPermissionHandler().getBypass())) {
 				CitadelUtility.sendAndLog(e.getPlayer(), ChatColor.RED,
 						"You do not have permission to bypass reinforcements on " + group.getName());
 				return;
@@ -123,7 +115,7 @@ public class ReinforcingState extends AbstractPlayerState {
 		} else {
 			// replace existing one
 			boolean changedGroup = false;
-			if (group.getGroupId() != rein.getGroup().getGroupId()) {
+			if (group.getPrimaryId() != rein.getGroup().getPrimaryId()) {
 				// switch group
 				ReinforcementGroupChangeEvent rgce = new ReinforcementGroupChangeEvent(player, rein, group);
 				Bukkit.getPluginManager().callEvent(rgce);

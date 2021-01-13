@@ -31,7 +31,6 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import vg.civcraft.mc.citadel.Citadel;
-import vg.civcraft.mc.citadel.CitadelPermissionHandler;
 import vg.civcraft.mc.citadel.ReinforcementLogic;
 import vg.civcraft.mc.citadel.model.Reinforcement;
 import vg.civcraft.mc.civmodcore.api.BlockAPI;
@@ -50,7 +49,7 @@ public class RedstoneListener implements Listener {
 		Collection<Entity> entities = reinLocation.getWorld().getNearbyEntities(reinLocation, diameter, diameter,
 				diameter,
 				e -> e instanceof Player && !e.isDead()
-						&& reinforcement.hasPermission(e.getUniqueId(), CitadelPermissionHandler.getDoors())
+						&& reinforcement.hasPermission(e.getUniqueId(), Citadel.getInstance().getPermissionHandler().getDoors())
 						&& e.getLocation().distanceSquared(reinLocation) <= diameter * diameter);
 		return !entities.isEmpty();
 	}
@@ -159,7 +158,7 @@ public class RedstoneListener implements Listener {
 			return;
 		}
 		for (UUID uuid : playersActivating) {
-			if (rein.hasPermission(uuid, CitadelPermissionHandler.getDoors())) {
+			if (rein.hasPermission(uuid, Citadel.getInstance().getPermissionHandler().getDoors())) {
 				// single valid perm is enough to open
 				return;
 			}

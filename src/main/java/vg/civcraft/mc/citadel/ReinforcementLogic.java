@@ -12,12 +12,13 @@ import org.bukkit.block.data.type.CoralWallFan;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
+
 import vg.civcraft.mc.citadel.events.ReinforcementCreationEvent;
 import vg.civcraft.mc.citadel.events.ReinforcementDestructionEvent;
 import vg.civcraft.mc.citadel.model.Reinforcement;
 import vg.civcraft.mc.citadel.reinforcementtypes.ReinforcementType;
 import vg.civcraft.mc.civmodcore.api.BlockAPI;
-import vg.civcraft.mc.namelayer.group.Group;
+import vg.civcraft.mc.namelayer.core.Group;
 
 public final class ReinforcementLogic {
 
@@ -84,7 +85,8 @@ public final class ReinforcementLogic {
 
 	public static double getDecayDamage(Reinforcement reinforcement) {
 		if (reinforcement.getGroup() != null) {
-			long lastRefresh = reinforcement.getGroup().getActivityTimeStamp();
+			//long lastRefresh = reinforcement.getGroup().getActivityTimeStamp(); //TODO
+			long lastRefresh = System.currentTimeMillis();
 			return reinforcement.getType().getDecayDamageMultipler(lastRefresh);
 		} else {
 			return reinforcement.getType().getDeletedGroupMultiplier();
@@ -318,7 +320,7 @@ public final class ReinforcementLogic {
 			if (rein == null || rein.isInsecure()) {
 				return false;
 			}
-			return !rein.hasPermission(player, CitadelPermissionHandler.getChests());
+			return !rein.hasPermission(player, Citadel.getInstance().getPermissionHandler().getChests());
 		}
 		return false;
 	}

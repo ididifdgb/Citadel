@@ -1,120 +1,105 @@
 package vg.civcraft.mc.citadel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import vg.civcraft.mc.namelayer.GroupManager.PlayerType;
-import vg.civcraft.mc.namelayer.permission.PermissionType;
+import vg.civcraft.mc.namelayer.core.DefaultPermissionLevel;
+import vg.civcraft.mc.namelayer.core.PermissionTracker;
+import vg.civcraft.mc.namelayer.core.PermissionType;
+import vg.civcraft.mc.namelayer.mc.GroupAPI;
 
 public class CitadelPermissionHandler {
 
-	private CitadelPermissionHandler() {
+	private final static String CHEST_PERM = "CONTAINER_ACCESS";
+	private final static String BYPASS_PERM = "BYPASS_REINFORCEMENT";
+	private final static String CROPS_PERM = "HARVEST_CROPS";
+	private final static String INSECURE_PERM = "INSECURE_REINFORCEMENT";
+	private final static String REINFORCE_PERM = "REINFORCE";
+	private final static String DOOR_PERM = "USE_DOORS";
+	private final static String ACID_PERM = "USE_ACID_BLOCKS";
+	private final static String INFO_PERM = "USE_INFORMATION_MODE";
+	private final static String REPAIR_PERM = "ALLOW_REPAIR_REINFORCEMENT";
+	private final static String MODIFY_PERM = "ALLOW_MODIFYING_BLOCKS";
+	private final static String BEACON_PERM = "USE_BEACONS";
+	private final static String HANGING_PLACE_BREAK_PERM = "ALLOWS_CHANGING_HANGING_BLOCKS";
+	private final static String ITEM_FRAME_HANDLE_PERM = "ALLOWS_HANDLING_ITEM_FRAMES";
+	private final static String ITEM_FRAME_ROTATE_PERM = "ALLOWS_ROTATING_ITEM_FRAMES";
+
+	private PermissionTracker permTracker;
+
+	public CitadelPermissionHandler(PermissionTracker permTracker) {
+		this.permTracker = permTracker;
+		setup();
 	}
 
-	private static PermissionType chestPerm;
-	private static PermissionType bypassPerm;
-	private static PermissionType cropsPerm;
-	private static PermissionType insecurePerm;
-	private static PermissionType reinforcePerm;
-	private static PermissionType doorPerm;
-	private static PermissionType acidPerm;
-	private static PermissionType infoPerm;
-	private static PermissionType repairPerm;
-	private static PermissionType modifyBlockPerm;
-	private static PermissionType beaconPerm;
-	private static PermissionType hangingPlaceBreak;
-	private static PermissionType itemFramePutTake;
-	private static PermissionType itemFrameRotate;
-
-	public static void setup() {
-		List<PlayerType> membersAndAbove = Arrays.asList(PlayerType.MEMBERS, PlayerType.MODS, PlayerType.ADMINS,
-				PlayerType.OWNER);
-		List<PlayerType> modAndAbove = Arrays.asList(PlayerType.MODS, PlayerType.ADMINS, PlayerType.OWNER);
-		reinforcePerm = PermissionType.registerPermission("REINFORCE", new ArrayList<>(modAndAbove),
-				"Allows reinforcing blocks on this group");
-		acidPerm = PermissionType.registerPermission("ACIDBLOCK", new ArrayList<>(modAndAbove),
-				"Allows activating acid blocks reinforced on this group");
-		infoPerm = PermissionType.registerPermission("REINFORCEMENT_INFO", new ArrayList<>(membersAndAbove),
-				"Allows viewing information on reinforcements reinforced on this group");
-		bypassPerm = PermissionType.registerPermission("BYPASS_REINFORCEMENT", new ArrayList<>(modAndAbove),
-				"Allows bypassing reinforcements reinforced on this group");
-		repairPerm = PermissionType.registerPermission("REPAIR_REINFORCEMENT", new ArrayList<>(modAndAbove),
-				"Allows repairing reinforcements reinforced on this group");
-		doorPerm = PermissionType.registerPermission("DOORS", new ArrayList<>(membersAndAbove),
-				"Allows opening doors reinforced on this group");
-		chestPerm = PermissionType.registerPermission("CHESTS", new ArrayList<>(membersAndAbove),
-				"Allows opening containers like chests reinforced on this group");
-		cropsPerm = PermissionType.registerPermission("CROPS", new ArrayList<>(membersAndAbove),
-				"Allows harvesting crops growing on soil reinforced on this group");
-		insecurePerm = PermissionType.registerPermission("INSECURE_REINFORCEMENT", new ArrayList<>(membersAndAbove),
-				"Allows toggling the insecure flag on reinforcements");
-		modifyBlockPerm = PermissionType.registerPermission("MODIFY_BLOCK", new ArrayList<>(modAndAbove),
-				"Allows modifying reinforced blocks like flipping levers, stripping logs etc.");
-		beaconPerm = PermissionType.registerPermission("BEACONS", new ArrayList<>(membersAndAbove),
-				"Allow changing beacon effects");
-		hangingPlaceBreak = PermissionType.registerPermission("HANGING_PLACE_BREAK", new ArrayList<>(membersAndAbove),
-				"Allows placing/breaking hanging entities on reinforced blocks.");
-		itemFramePutTake = PermissionType.registerPermission("ITEM_FRAME_PUT_TAKE", new ArrayList<>(membersAndAbove),
-				"Allows the placing/removal of items into/from Item Frames.");
-		itemFrameRotate = PermissionType.registerPermission("ITEM_FRAME_ROTATE", new ArrayList<>(membersAndAbove),
-				"Allows the rotation of items placed within Item Frames.");
-	}
-	
-	public static PermissionType getModifyBlocks() {
-		return modifyBlockPerm;
+	private static void setup() {
+		GroupAPI.registerPermission(REINFORCE_PERM, DefaultPermissionLevel.MOD, "Allows reinforcing blocks on this group");
+		GroupAPI.registerPermission(ACID_PERM, DefaultPermissionLevel.MOD, "Allows activating acid blocks reinforced on this group");		
+		GroupAPI.registerPermission(INFO_PERM, DefaultPermissionLevel.MEMBER, "Allows viewing information on reinforcements reinforced on this group");		
+		GroupAPI.registerPermission(BYPASS_PERM, DefaultPermissionLevel.MOD, "Allows bypassing reinforcements reinforced on this group");		
+		GroupAPI.registerPermission(REPAIR_PERM, DefaultPermissionLevel.MOD, "Allows repairing reinforcements reinforced on this group");		
+		GroupAPI.registerPermission(DOOR_PERM, DefaultPermissionLevel.MEMBER, "Allows opening doors reinforced on this group");		
+		GroupAPI.registerPermission(CHEST_PERM, DefaultPermissionLevel.MEMBER, "Allows opening containers like chests reinforced on this group");		
+		GroupAPI.registerPermission(CROPS_PERM, DefaultPermissionLevel.MEMBER, "Allows harvesting crops growing on soil reinforced on this group");		
+		GroupAPI.registerPermission(INSECURE_PERM, DefaultPermissionLevel.MEMBER, "Allows toggling the insecure flag on reinforcements");		
+		GroupAPI.registerPermission(MODIFY_PERM, DefaultPermissionLevel.MOD, "Allows modifying reinforced blocks like flipping levers, stripping logs etc");		
+		GroupAPI.registerPermission(BEACON_PERM, DefaultPermissionLevel.MEMBER, "Allow changing beacon effects");		
+		GroupAPI.registerPermission(HANGING_PLACE_BREAK_PERM, DefaultPermissionLevel.MOD, "Allows placing/breaking hanging entities on reinforced blocks");		
+		GroupAPI.registerPermission(ITEM_FRAME_HANDLE_PERM, DefaultPermissionLevel.MOD, "Allows the placing/removal of items into/from Item Frames");		
+		GroupAPI.registerPermission(ITEM_FRAME_ROTATE_PERM, DefaultPermissionLevel.MEMBER, "Allows the rotation of items placed within Item Frames");		
 	}
 
-	public static PermissionType getChests() {
-		return chestPerm;
+	public PermissionType getModifyBlocks() {
+		return permTracker.getPermission(MODIFY_PERM);
 	}
 
-	public static PermissionType getDoors() {
-		return doorPerm;
+	public PermissionType getChests() {
+		return permTracker.getPermission(CHEST_PERM);
 	}
 
-	public static PermissionType getBypass() {
-		return bypassPerm;
+	public PermissionType getDoors() {
+		return permTracker.getPermission(DOOR_PERM);
 	}
 
-	public static PermissionType getReinforce() {
-		return reinforcePerm;
+	public PermissionType getBypass() {
+		return permTracker.getPermission(BYPASS_PERM);
 	}
 
-	public static PermissionType getAcidblock() {
-		return acidPerm;
+	public PermissionType getReinforce() {
+		return permTracker.getPermission(REINFORCE_PERM);
 	}
 
-	public static PermissionType getCrops() {
-		return cropsPerm;
+	public PermissionType getAcidblock() {
+		return permTracker.getPermission(ACID_PERM);
 	}
 
-	public static PermissionType getInsecure() {
-		return insecurePerm;
+	public PermissionType getCrops() {
+		return permTracker.getPermission(CROPS_PERM);
 	}
 
-	public static PermissionType getInfo() {
-		return infoPerm;
+	public PermissionType getInsecure() {
+		return permTracker.getPermission(INSECURE_PERM);
 	}
 
-	public static PermissionType getRepair() {
-		return repairPerm;
+	public PermissionType getInfo() {
+		return permTracker.getPermission(INFO_PERM);
 	}
 
-	public static PermissionType getBeacon() {
-		return beaconPerm;
+	public PermissionType getRepair() {
+		return permTracker.getPermission(REPAIR_PERM);
 	}
 
-	public static PermissionType getHangingPlaceBreak() {
-		return hangingPlaceBreak;
+	public PermissionType getBeacon() {
+		return permTracker.getPermission(BEACON_PERM);
 	}
 
-	public static PermissionType getItemFramePutTake() {
-		return itemFramePutTake;
+	public PermissionType getHangingPlaceBreak() {
+		return permTracker.getPermission(HANGING_PLACE_BREAK_PERM);
 	}
 
-	public static PermissionType getItemFrameRotate() {
-		return itemFrameRotate;
+	public PermissionType getItemFramePutTake() {
+		return permTracker.getPermission(ITEM_FRAME_HANDLE_PERM);
+	}
+
+	public PermissionType getItemFrameRotate() {
+		return permTracker.getPermission(ITEM_FRAME_ROTATE_PERM);
 	}
 
 }

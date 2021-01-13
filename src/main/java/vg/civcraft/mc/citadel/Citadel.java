@@ -7,8 +7,8 @@ import org.bukkit.event.HandlerList;
 
 import vg.civcraft.mc.citadel.listener.BlockListener;
 import vg.civcraft.mc.citadel.listener.EntityListener;
-import vg.civcraft.mc.citadel.listener.ModeListener;
 import vg.civcraft.mc.citadel.listener.InventoryListener;
+import vg.civcraft.mc.citadel.listener.ModeListener;
 import vg.civcraft.mc.citadel.listener.RedstoneListener;
 import vg.civcraft.mc.citadel.model.AcidManager;
 import vg.civcraft.mc.citadel.model.CitadelChunkData;
@@ -23,6 +23,7 @@ import vg.civcraft.mc.civmodcore.locations.chunkmeta.api.BlockBasedChunkMetaView
 import vg.civcraft.mc.civmodcore.locations.chunkmeta.api.ChunkMetaAPI;
 import vg.civcraft.mc.civmodcore.locations.chunkmeta.block.table.TableBasedDataObject;
 import vg.civcraft.mc.civmodcore.locations.chunkmeta.block.table.TableStorageEngine;
+import vg.civcraft.mc.namelayer.mc.NameLayerPlugin;
 
 public class Citadel extends ACivMod {
 
@@ -40,6 +41,7 @@ public class Citadel extends ACivMod {
 	private HologramManager holoManager;
 	private CitadelSettingManager settingManager;
 	private CitadelDAO dao;
+	private CitadelPermissionHandler permHandler;
 
 	private PlayerStateManager stateManager;
 
@@ -72,6 +74,10 @@ public class Citadel extends ACivMod {
 
 	public HologramManager getHologramManager() {
 		return holoManager;
+	}
+	
+	public CitadelPermissionHandler getPermissionHandler() {
+		return permHandler;
 	}
 	
 	CitadelDAO getDAO() {
@@ -133,7 +139,7 @@ public class Citadel extends ACivMod {
 			else {
 				logger.info("HolographicDisplays is not loaded, no holograms available");
 			}});
-		CitadelPermissionHandler.setup();
+		permHandler = new CitadelPermissionHandler(NameLayerPlugin.getInstance().getGroupTracker().getPermissionTracker());
 		registerListeners();
 	}
 

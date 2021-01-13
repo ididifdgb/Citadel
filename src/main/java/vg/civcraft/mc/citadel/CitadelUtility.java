@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 import vg.civcraft.mc.citadel.model.Reinforcement;
 import vg.civcraft.mc.citadel.reinforcementtypes.ReinforcementType;
 import vg.civcraft.mc.civmodcore.itemHandling.ItemMap;
-import vg.civcraft.mc.namelayer.NameAPI;
-import vg.civcraft.mc.namelayer.group.Group;
+import vg.civcraft.mc.namelayer.core.Group;
+import vg.civcraft.mc.namelayer.mc.GroupAPI;
 
 /**
  * Just a useful class with general and misplaced methods that can be called
@@ -91,16 +91,9 @@ public class CitadelUtility {
 
 	public static boolean attemptReinforcementCreation(Block block, ReinforcementType type, Group group,
 			Player player) {
-		// check if group still exists
-		if (!group.isValid()) {
-			CitadelUtility.sendAndLog(player, ChatColor.RED,
-					"The group " + group.getName() + " seems to have been deleted in the mean time");
-			Citadel.getInstance().getStateManager().setState(player, null);
-			return true;
-		}
 		// check if player still has permission
-		if (!NameAPI.getGroupManager().hasAccess(group, player.getUniqueId(),
-				CitadelPermissionHandler.getReinforce())) {
+		if (!GroupAPI.hasPermission(player.getUniqueId(), group,
+				Citadel.getInstance().getPermissionHandler().getReinforce())) {
 			CitadelUtility.sendAndLog(player, ChatColor.RED,
 					"You seem to have lost permission to reinforce on " + group.getName());
 			Citadel.getInstance().getStateManager().setState(player, null);

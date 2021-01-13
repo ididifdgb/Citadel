@@ -24,7 +24,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import vg.civcraft.mc.citadel.Citadel;
-import vg.civcraft.mc.citadel.CitadelPermissionHandler;
 import vg.civcraft.mc.citadel.CitadelUtility;
 import vg.civcraft.mc.citadel.ReinforcementLogic;
 import vg.civcraft.mc.citadel.model.Reinforcement;
@@ -183,7 +182,7 @@ public class BlockListener implements Listener {
 			return;
 		}
 		if (e.getClickedBlock().getState() instanceof Container) {
-			if (!rein.hasPermission(e.getPlayer(), CitadelPermissionHandler.getChests())) {
+			if (!rein.hasPermission(e.getPlayer(), Citadel.getInstance().getPermissionHandler().getChests())) {
 				e.setCancelled(true);
 				String msg = String.format("%s is locked with %s%s", e.getClickedBlock().getType().name(),
 						ChatColor.AQUA, rein.getType().getName());
@@ -192,7 +191,7 @@ public class BlockListener implements Listener {
 			return;
 		}
 		if (e.getClickedBlock().getBlockData() instanceof Openable) {
-			if (!rein.hasPermission(e.getPlayer(), CitadelPermissionHandler.getDoors())) {
+			if (!rein.hasPermission(e.getPlayer(), Citadel.getInstance().getPermissionHandler().getDoors())) {
 				e.setCancelled(true);
 				String msg = String.format("%s is locked with %s%s", e.getClickedBlock().getType().name(),
 						ChatColor.AQUA, rein.getType().getName());
@@ -260,7 +259,7 @@ public class BlockListener implements Listener {
 		if (rein == null) {
 			return;
 		}
-		if (!rein.hasPermission(p, CitadelPermissionHandler.getModifyBlocks())) {
+		if (!rein.hasPermission(p, Citadel.getInstance().getPermissionHandler().getModifyBlocks())) {
 			p.sendMessage(ChatColor.RED + "You do not have permission to modify this block");
 			pie.setCancelled(true);
 		}
@@ -296,7 +295,7 @@ public class BlockListener implements Listener {
 		if (rein == null) {
 			return;
 		}
-		if (!rein.hasPermission(p, CitadelPermissionHandler.getModifyBlocks())) {
+		if (!rein.hasPermission(p, Citadel.getInstance().getPermissionHandler().getModifyBlocks())) {
 			p.sendMessage(ChatColor.RED + "You do not have permission to modify this block");
 			pie.setCancelled(true);
 		}
@@ -334,7 +333,7 @@ public class BlockListener implements Listener {
 		if (rein == null) {
 			return;
 		}
-		if (!rein.hasPermission(p, CitadelPermissionHandler.getModifyBlocks())) {
+		if (!rein.hasPermission(p, Citadel.getInstance().getPermissionHandler().getModifyBlocks())) {
 			p.sendMessage(ChatColor.RED + "You do not have permission to modify this block");
 			pie.setCancelled(true);
 		}
@@ -372,7 +371,7 @@ public class BlockListener implements Listener {
 		if (rein == null) {
 			return;
 		}
-		if (!rein.hasPermission(p, CitadelPermissionHandler.getModifyBlocks())) {
+		if (!rein.hasPermission(p, Citadel.getInstance().getPermissionHandler().getModifyBlocks())) {
 			p.sendMessage(ChatColor.RED + "You do not have permission to harvest this block");
 			pie.setCancelled(true);
 		}
@@ -393,7 +392,7 @@ public class BlockListener implements Listener {
 		if (rein == null) {
 			return;
 		}
-		if (!rein.hasPermission(pie.getPlayer(), CitadelPermissionHandler.getBeacon())) {
+		if (!rein.hasPermission(pie.getPlayer(), Citadel.getInstance().getPermissionHandler().getBeacon())) {
 			pie.setCancelled(true);
 			String msg = String.format("%s is locked with %s%s", pie.getClickedBlock().getType().name(), ChatColor.AQUA,
 					rein.getType().getName());

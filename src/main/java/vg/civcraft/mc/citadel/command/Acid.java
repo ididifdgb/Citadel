@@ -1,18 +1,22 @@
 package vg.civcraft.mc.citadel.command;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
 import org.bukkit.block.Container;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
+
 import vg.civcraft.mc.citadel.Citadel;
-import vg.civcraft.mc.citadel.CitadelPermissionHandler;
 import vg.civcraft.mc.citadel.CitadelUtility;
 import vg.civcraft.mc.citadel.ReinforcementLogic;
 import vg.civcraft.mc.citadel.events.ReinforcementAcidBlockedEvent;
@@ -22,12 +26,7 @@ import vg.civcraft.mc.civmodcore.api.MaterialAPI;
 import vg.civcraft.mc.civmodcore.command.CivCommand;
 import vg.civcraft.mc.civmodcore.command.StandaloneCommand;
 import vg.civcraft.mc.civmodcore.util.TextUtil;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
+import vg.civcraft.mc.namelayer.mc.GroupAPI;
 
 @CivCommand(id = "ctacid")
 public class Acid extends StandaloneCommand {
@@ -54,7 +53,7 @@ public class Acid extends StandaloneCommand {
 				CitadelUtility.sendAndLog(p, ChatColor.RED, "That block is not reinforced.");
 				return true;
 			}
-			if (!reinforcement.hasPermission(p, CitadelPermissionHandler.getAcidblock())) {
+			if (!GroupAPI.hasPermission(p, reinforcement.getGroup(), Citadel.getInstance().getPermissionHandler().getAcidblock())) {
 				CitadelUtility.sendAndLog(p, ChatColor.RED,
 						"You do not have sufficient permission to use acid blocks on this group.");
 				return true;

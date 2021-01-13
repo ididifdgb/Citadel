@@ -17,7 +17,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import vg.civcraft.mc.citadel.Citadel;
-import vg.civcraft.mc.citadel.CitadelPermissionHandler;
 import vg.civcraft.mc.citadel.CitadelUtility;
 import vg.civcraft.mc.citadel.ReinforcementLogic;
 import vg.civcraft.mc.citadel.events.ReinforcementModeSwitchEvent;
@@ -213,7 +212,7 @@ public class ModeListener implements Listener {
 			e.setCancelled(true);
 		}
 		boolean showHolo = settingMan.shouldShowHologramInCti(player.getUniqueId());
-		if (!rein.hasPermission(player, CitadelPermissionHandler.getInfo())) {
+		if (!rein.hasPermission(player, Citadel.getInstance().getPermissionHandler().getInfo())) {
 			if (showChat) {
 				Citadel.getInstance().getSettingManager().sendCtiEnemyMessage(player, rein);
 			}

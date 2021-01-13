@@ -18,7 +18,6 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import vg.civcraft.mc.citadel.Citadel;
-import vg.civcraft.mc.citadel.CitadelPermissionHandler;
 import vg.civcraft.mc.citadel.listener.ModeListener;
 public class HologramManager {
 
@@ -102,7 +101,7 @@ public class HologramManager {
 			// we intentionally cache permission to avoid having to look it up often
 			// showing a bit too much information if the player gets kicked while a holo is
 			// already visible does not matter
-			this.hasPermission = reinforcement.hasPermission(player, CitadelPermissionHandler.getInfo());
+			this.hasPermission = reinforcement.hasPermission(player, Citadel.getInstance().getPermissionHandler().getInfo());
 		}
 
 		void show() {

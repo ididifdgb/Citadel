@@ -8,10 +8,9 @@ import org.bukkit.entity.Player;
 
 import vg.civcraft.mc.citadel.reinforcementtypes.ReinforcementType;
 import vg.civcraft.mc.civmodcore.locations.chunkmeta.block.table.TableBasedDataObject;
-import vg.civcraft.mc.namelayer.GroupManager;
-import vg.civcraft.mc.namelayer.NameAPI;
-import vg.civcraft.mc.namelayer.group.Group;
-import vg.civcraft.mc.namelayer.permission.PermissionType;
+import vg.civcraft.mc.namelayer.core.Group;
+import vg.civcraft.mc.namelayer.core.PermissionType;
+import vg.civcraft.mc.namelayer.mc.GroupAPI;
 
 public class Reinforcement extends TableBasedDataObject {
 
@@ -24,7 +23,7 @@ public class Reinforcement extends TableBasedDataObject {
 	private boolean insecure;
 
 	public Reinforcement(Location loc, ReinforcementType type, Group group) {
-		this(loc, type, group.getGroupId(), System.currentTimeMillis(), type.getHealth(), false, true);
+		this(loc, type, group.getPrimaryId(), System.currentTimeMillis(), type.getHealth(), false, true);
 	}
 
 	public Reinforcement(Location loc, ReinforcementType type, int groupID, long creationTime, float health,
@@ -58,7 +57,7 @@ public class Reinforcement extends TableBasedDataObject {
 	 * @return Group this reinforcement is under
 	 */
 	public Group getGroup() {
-		return GroupManager.getGroup(groupId);
+		return GroupAPI.getGroup(groupId);
 	}
 
 	/**
@@ -109,7 +108,7 @@ public class Reinforcement extends TableBasedDataObject {
 		if (g == null) {
 			return false;
 		}
-		return NameAPI.getGroupManager().hasAccess(g, uuid, permission);
+		return GroupAPI.hasPermission(uuid, g, permission);
 	}
 	
 	/**
@@ -154,7 +153,7 @@ public class Reinforcement extends TableBasedDataObject {
 		if (group == null) {
 			throw new IllegalArgumentException("Group can not be set to null for a reinforcement");
 		}
-		this.groupId = group.getGroupId();
+		this.groupId = group.getPrimaryId();
 		setDirty();
 	}
 

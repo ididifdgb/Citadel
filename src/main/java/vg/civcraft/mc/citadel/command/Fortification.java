@@ -16,10 +16,9 @@ import vg.civcraft.mc.citadel.playerstate.PlayerStateManager;
 import vg.civcraft.mc.citadel.reinforcementtypes.ReinforcementType;
 import vg.civcraft.mc.civmodcore.command.CivCommand;
 import vg.civcraft.mc.civmodcore.command.StandaloneCommand;
-import vg.civcraft.mc.namelayer.GroupManager;
-import vg.civcraft.mc.namelayer.NameAPI;
-import vg.civcraft.mc.namelayer.command.TabCompleters.GroupTabCompleter;
-import vg.civcraft.mc.namelayer.group.Group;
+import vg.civcraft.mc.namelayer.core.Group;
+import vg.civcraft.mc.namelayer.mc.GroupAPI;
+import vg.civcraft.mc.namelayer.mc.commands.NameLayerTabCompletion;
 
 @CivCommand(id = "ctf")
 public class Fortification extends StandaloneCommand {
@@ -40,29 +39,28 @@ public class Fortification extends StandaloneCommand {
 			stateManager.setState(player, null);
 			return true;
 		}
-		
-		String groupName = null;
+
+		Group group = null;
 		if (args.length == 0) {
-			groupName = NameAPI.getGroupManager().getDefaultGroup(player.getUniqueId());
-			if (groupName == null) {
+			group = GroupAPI.getDefaultGroup(player);
+			if (group == null) {
 				CitadelUtility.sendAndLog(player, ChatColor.RED,
 						"You need to fortify to a group! Try /fortify groupname. \n Or use /create groupname if you don't have a group yet.");
 				return true;
 			}
 		} else {
-			groupName = args[0];
+			group = GroupAPI.getGroup(args[0]);
 		}
-		
-		Group group = GroupManager.getGroup(groupName);
 		if (group == null) {
-			CitadelUtility.sendAndLog(player, ChatColor.RED, "The group " + groupName + " does not exist.");
+			CitadelUtility.sendAndLog(player, ChatColor.RED, "The group " + args[0] + " does not exist.");
 			stateManager.setState(player, null);
 			return true;
 		}
-		boolean hasAccess = NameAPI.getGroupManager().hasAccess(group.getName(), player.getUniqueId(),
-				CitadelPermissionHandler.getReinforce());
+		boolean hasAccess = GroupAPI.hasPermission(player.getUniqueId(), group,
+				Citadel.getInstance().getPermissionHandler().getReinforce());
 		if (!hasAccess) {
-			CitadelUtility.sendAndLog(player, ChatColor.RED, "You do not have permission to reinforce on " + group.getName());
+			CitadelUtility.sendAndLog(player, ChatColor.RED,
+					"You do not have permission to reinforce on " + group.getName());
 			stateManager.setState(player, null);
 			return true;
 		}
@@ -79,12 +77,13 @@ public class Fortification extends StandaloneCommand {
 
 	@Override
 	public List<String> tabComplete(CommandSender sender, String[] args) {
+		if (!(sender instanceof Player))
+			return null;
+
 		if (args.length == 0)
-			return GroupTabCompleter.complete(null, CitadelPermissionHandler.getReinforce(),
-					(Player) sender);
+			return NameLayerTabCompletion.completeGroupName("", (Player) sender);
 		else if (args.length == 1)
-			return GroupTabCompleter.complete(args[0], CitadelPermissionHandler.getReinforce(),
-					(Player) sender);
+			return NameLayerTabCompletion.completeGroupName(args[0], (Player) sender);
 		else {
 			return new ArrayList<>();
 		}

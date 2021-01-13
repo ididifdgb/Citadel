@@ -12,7 +12,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import vg.civcraft.mc.citadel.CitadelPermissionHandler;
+import vg.civcraft.mc.citadel.Citadel;
 import vg.civcraft.mc.citadel.CitadelUtility;
 import vg.civcraft.mc.citadel.ReinforcementLogic;
 import vg.civcraft.mc.citadel.events.ReinforcedBlockBreak;
@@ -46,14 +46,14 @@ public abstract class AbstractPlayerState {
 			return;
 		}
 		if (CitadelUtility.isPlant(e.getBlock())) {
-			if (rein.hasPermission(e.getPlayer(), CitadelPermissionHandler.getCrops())
+			if (rein.hasPermission(e.getPlayer(), Citadel.getInstance().getPermissionHandler().getCrops())
 					&& !e.getBlock().getLocation().equals(rein.getLocation())) {
 				// allow, because player has crop permission and the only reinforcement
 				// protecting is in the soil
 				return;
 			}
 		}
-		boolean hasAccess = rein.hasPermission(e.getPlayer(), CitadelPermissionHandler.getBypass());
+		boolean hasAccess = rein.hasPermission(e.getPlayer(), Citadel.getInstance().getPermissionHandler().getBypass());
 		BooleanSetting setting = (BooleanSetting) PlayerSettingAPI.getSetting("citadelBypass");
 		boolean hasByPass = setting.getValue(e.getPlayer());
 		if (hasAccess && hasByPass) {

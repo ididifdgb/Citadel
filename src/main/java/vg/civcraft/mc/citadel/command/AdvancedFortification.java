@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import vg.civcraft.mc.citadel.Citadel;
-import vg.civcraft.mc.citadel.CitadelPermissionHandler;
 import vg.civcraft.mc.citadel.CitadelUtility;
 import vg.civcraft.mc.citadel.playerstate.AbstractPlayerState;
 import vg.civcraft.mc.citadel.playerstate.AdvancedFortificationState;
@@ -18,10 +17,9 @@ import vg.civcraft.mc.citadel.playerstate.PlayerStateManager;
 import vg.civcraft.mc.citadel.reinforcementtypes.ReinforcementType;
 import vg.civcraft.mc.civmodcore.command.CivCommand;
 import vg.civcraft.mc.civmodcore.command.StandaloneCommand;
-import vg.civcraft.mc.namelayer.GroupManager;
-import vg.civcraft.mc.namelayer.NameAPI;
-import vg.civcraft.mc.namelayer.command.TabCompleters.GroupTabCompleter;
-import vg.civcraft.mc.namelayer.group.Group;
+import vg.civcraft.mc.namelayer.core.Group;
+import vg.civcraft.mc.namelayer.mc.GroupAPI;
+import vg.civcraft.mc.namelayer.mc.commands.NameLayerTabCompletion;
 
 @CivCommand(id = "cta")
 public class AdvancedFortification extends StandaloneCommand {
@@ -60,25 +58,22 @@ public class AdvancedFortification extends StandaloneCommand {
 					type.getName() + ChatColor.RED + " can not reinforce " + mainHand.getType().name());
 			return true;
 		}
-		String groupName = null;
+		Group group = null;
 		if (args.length == 0) {
-			groupName = NameAPI.getGroupManager().getDefaultGroup(player.getUniqueId());
-			if (groupName == null) {
+			group = GroupAPI.getDefaultGroup(player);
+			if (group == null) {
 				CitadelUtility.sendAndLog(player, ChatColor.RED,
 						"You don't have a default group and can thus not use this command without specifying a group");
 				return true;
 			}
 		} else {
-			groupName = args[0];
+			group = GroupAPI.getGroup(args[0]);
 		}
-
-		Group group = GroupManager.getGroup(groupName);
 		if (group == null) {
-			CitadelUtility.sendAndLog(player, ChatColor.RED, "The group " + groupName + " does not exist.");
+			CitadelUtility.sendAndLog(player, ChatColor.RED, "The group " + args[0] + " does not exist.");
 			return true;
 		}
-		boolean hasAccess = NameAPI.getGroupManager().hasAccess(group.getName(), player.getUniqueId(),
-				CitadelPermissionHandler.getReinforce());
+		boolean hasAccess = GroupAPI.hasPermission(player.getUniqueId(), group, Citadel.getInstance().getPermissionHandler().getReinforce());
 		if (!hasAccess) {
 			CitadelUtility.sendAndLog(player, ChatColor.RED, "You do not have permission to reinforce on " + group.getName());
 			return true;
@@ -94,11 +89,9 @@ public class AdvancedFortification extends StandaloneCommand {
 	@Override
 	public List<String> tabComplete(CommandSender sender, String[] args) {
 		if (args.length == 0)
-			return GroupTabCompleter.complete(null, CitadelPermissionHandler.getReinforce(),
-					(Player) sender);
+			return NameLayerTabCompletion.completeGroupName("", (Player) sender);
 		else if (args.length == 1)
-			return GroupTabCompleter.complete(args[0], CitadelPermissionHandler.getReinforce(),
-					(Player) sender);
+			return NameLayerTabCompletion.completeGroupName(args[0], (Player) sender);
 		else {
 			return new ArrayList<>();
 		}
