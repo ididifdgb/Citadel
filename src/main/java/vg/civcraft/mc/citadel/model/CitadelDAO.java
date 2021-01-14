@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -29,6 +31,7 @@ import vg.civcraft.mc.civmodcore.locations.chunkmeta.block.BlockBasedChunkMeta;
 import vg.civcraft.mc.civmodcore.locations.chunkmeta.block.table.TableBasedBlockChunkMeta;
 import vg.civcraft.mc.civmodcore.locations.chunkmeta.block.table.TableStorageEngine;
 import vg.civcraft.mc.civmodcore.locations.global.WorldIDManager;
+import vg.civcraft.mc.namelayer.mc.GroupAPI;
 
 public class CitadelDAO extends TableStorageEngine<Reinforcement> {
 
@@ -268,6 +271,7 @@ public class CitadelDAO extends TableStorageEngine<Reinforcement> {
 		int preMultipliedZ = chunkData.getChunkCoord().getZ() * 16;
 		ReinforcementTypeManager typeMan = Citadel.getInstance().getReinforcementTypeManager();
 		World world = chunkData.getChunkCoord().getWorld();
+		Set<Integer> groupIDs = new TreeSet<>();
 		try (Connection insertConn = db.getConnection();
 				PreparedStatement selectRein = insertConn.prepareStatement(
 						"select x_offset, y, z_offset, type_id, group_id, creation_time, health, insecure "
@@ -290,6 +294,7 @@ public class CitadelDAO extends TableStorageEngine<Reinforcement> {
 						continue;
 					}
 					int groupID = rs.getInt(5);
+					groupIDs.add(groupID);
 					long creationTime = rs.getTimestamp(6).getTime();
 					float health = rs.getFloat(7);
 					boolean insecure = rs.getBoolean(8);
@@ -301,6 +306,7 @@ public class CitadelDAO extends TableStorageEngine<Reinforcement> {
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, "Failed to load reinforcement from db: ", e);
 		}
+		groupIDs.forEach(GroupAPI::requestToBeCached);
 	}
 
 	@Override
