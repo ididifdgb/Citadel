@@ -49,12 +49,18 @@ public class CitadelUtility {
 			case PUMPKIN_STEM:
 			case ATTACHED_MELON_STEM:
 			case ATTACHED_PUMPKIN_STEM:
-			case NETHER_WART_BLOCK:
+			case NETHER_WART:
 			case SUGAR_CANE:
 			case CACTUS:
 			case SUNFLOWER:
 			case LILAC:
 			case PEONY:
+			case TWISTING_VINES:
+			case TWISTING_VINES_PLANT:
+			case WEEPING_VINES:
+			case WEEPING_VINES_PLANT:
+			case KELP:
+			case KELP_PLANT:
 				return true;
 			default:
 				return false;
